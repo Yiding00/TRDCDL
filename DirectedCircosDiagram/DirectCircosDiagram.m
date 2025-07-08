@@ -29,7 +29,7 @@ classdef DirectCircosDiagram
                 obj.indexInClass(tClassBool)=tCumsumBool(tClassBool);
             end
             obj.classRatio=obj.classSize./sum(obj.classSize);
-            disp(char([64 97 117 116 104 111 114 32 58 32 115 108 97 110 100 97 114 101 114]))
+            % disp(char([64 97 117 116 104 111 114 32 58 32 115 108 97 110 100 97 114 101 114]))
             obj.ColorOrder=[obj.ColorOrder;rand([obj.classNum,3])];
             for i=1:size(obj.Data,1)
                 obj.PartName{i}='';
@@ -65,31 +65,20 @@ classdef DirectCircosDiagram
                 fig.Position(1:2)=fig.Position(1:2)./3;
             end
 
-            sepTheta=2/30/obj.classNum;
-            cumTheta=[0,28/30*cumsum(obj.classRatio)];
+            sepTheta=1/length(obj.Class);
+            cumTheta=[0,cumsum(obj.classRatio)];
+
+            % 计算每一类中每一个元素的角度
+            for i=1:obj.classNum
+                obj.classTheta(i).T=linspace(cumTheta(i),cumTheta(i+1),obj.classSize(i)+1).*2.*pi;
+            end
 
             if isempty(obj.PartName{1})&&isempty(obj.PartName{2})
                 tdis=1.12;
             else
                 tdis=1.22;
             end
-            % 计算每一类中每一个元素的角度
-            for i=1:obj.classNum
-                obj.classTheta(i).T=linspace(sepTheta*i+cumTheta(i)+sepTheta/2,sepTheta*i+cumTheta(i+1),obj.classSize(i)).*2.*pi;
-                % % 画点
-                % obj.scatterHdl(i)=scatter(cos(obj.classTheta(i).T),sin(obj.classTheta(i).T),50,'filled','CData',obj.ColorOrder(i,:),'MarkerEdgeColor','none');
 
-                % CTi=mean(obj.classTheta(i).T);
-                % rotation=CTi/pi*180;
-                % if rotation>0&&rotation<180
-                %     obj.classLabelHdl(i)=text(cos(CTi).*tdis,sin(CTi).*tdis,obj.ClassName{i},'FontSize',14,'FontName','Arial',...
-                %     'HorizontalAlignment','center','Rotation',-(.5*pi-CTi)./pi.*180);
-                % else
-                %     obj.classLabelHdl(i)=text(cos(CTi).*tdis,sin(CTi).*tdis,obj.ClassName{i},'FontSize',14,...
-                %     'HorizontalAlignment','center','Rotation',-(1.5*pi-CTi)./pi.*180);
-                % end
-            end
-            % 定义环的内外半径
             outerRadius = 1.05; % 环的外半径
             innerRadius = 1.0; % 环的内半径
             
@@ -97,7 +86,7 @@ classdef DirectCircosDiagram
             for i = 1:obj.classNum
 
                 % 环的角度范围
-                theta=linspace(sepTheta*i+cumTheta(i),sepTheta*i+cumTheta(i+1)+sepTheta,obj.classSize(i)).*2.*pi;
+                theta=linspace(cumTheta(i),cumTheta(i+1),obj.classSize(i)+1).*2.*pi;
             
                 % 计算外圆和内圆的坐标
                 x_outer = outerRadius * cos(theta);
@@ -156,8 +145,8 @@ classdef DirectCircosDiagram
                     if obj.Data(i,j)>0
                         Ci=obj.Class(i);Pi=obj.indexInClass(i);
                         Cj=obj.Class(j);Pj=obj.indexInClass(j);
-                        Ti=obj.classTheta(Ci).T(Pi);
-                        Tj=obj.classTheta(Cj).T(Pj);
+                        Ti=obj.classTheta(Ci).T(Pi)+2*pi*sepTheta/2;
+                        Tj=obj.classTheta(Cj).T(Pj)+2*pi*sepTheta/2;
                         Xij=[cos(Ti),0,cos(Tj)]';
                         Yij=[sin(Ti),0,sin(Tj)]';
                         XYb=bezierCurve([Xij,Yij],200);

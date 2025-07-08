@@ -5,8 +5,8 @@ classdef DirectCircosDiagram
     properties
         ax,arginList={'ColorOrder','ClassName','PartName'}
         ColorOrder=[134,184,176;131,147,149;201,179,80;
-            198,132,111;170,151,173;93,150,172;190,123,181;117,116,192;
-            161,86,144;134,138,33;240,73,53;90,123,207;254,147,44;186,79,115;35,170,102]./255;
+            198,132,111;170,151,173;93,150,172;190,123,181;117,116,192;135,187,171;135,148,142;200,175,82;
+            191,136,115;171,152,175;95,158,179;195,120,187;110,115,196]./255;
         ClassName,PartName
         Data,Class,indexInClass,colorSet={[]}
         classSet,classNum,classSize,classRatio,classTheta
@@ -105,10 +105,10 @@ classdef DirectCircosDiagram
                 CTi = mean(obj.classTheta(i).T);
                 rotation = CTi / pi * 180;
                 if rotation > 0 && rotation < 180
-                    obj.classLabelHdl(i) = text(cos(CTi) * tdis, sin(CTi) * tdis, obj.ClassName{i}, 'FontSize', 14, 'FontName', 'Arial', ...
+                    obj.classLabelHdl(i) = text(cos(CTi) * tdis, sin(CTi) * tdis, obj.ClassName{i}, 'FontSize', 14/90*length(obj.Class), 'FontName', 'Arial', ...
                         'HorizontalAlignment', 'center', 'Rotation', -(.5 * pi - CTi) / pi * 180);
                 else
-                    obj.classLabelHdl(i) = text(cos(CTi) * tdis, sin(CTi) * tdis, obj.ClassName{i}, 'FontSize', 14, ...
+                    obj.classLabelHdl(i) = text(cos(CTi) * tdis, sin(CTi) * tdis, obj.ClassName{i}, 'FontSize', 14/90*length(obj.Class), ...
                         'HorizontalAlignment', 'center', 'Rotation', -(1.5 * pi - CTi) / pi * 180);
                 end
             end
@@ -121,9 +121,9 @@ classdef DirectCircosDiagram
                  
                 if rotation>90&&rotation<270
                     rotation=rotation+180;
-                    obj.partLabelHdl(i)=text(cos(Ti).*1.03,sin(Ti).*1.03,obj.PartName{i},'Rotation',rotation,'HorizontalAlignment','right','FontSize',8);
+                    obj.partLabelHdl(i)=text(cos(Ti).*1.03,sin(Ti).*1.03,obj.PartName{i},'Rotation',rotation,'HorizontalAlignment','right','FontSize',8/90*length(obj.Class));
                 else
-                    obj.partLabelHdl(i)=text(cos(Ti).*1.03,sin(Ti).*1.03,obj.PartName{i},'Rotation',rotation,'FontSize',8);
+                    obj.partLabelHdl(i)=text(cos(Ti).*1.03,sin(Ti).*1.03,obj.PartName{i},'Rotation',rotation,'FontSize',8/90*length(obj.Class));
                 end
             end
 
@@ -141,8 +141,8 @@ classdef DirectCircosDiagram
             end
             % 画线并赋予颜色
             for i=1:size(obj.Data,1)
-                for j=1:(i-1)
-                    if obj.Data(i,j)>0
+                for j=1:size(obj.Data,1)
+                    if obj.Data(i,j)>0 && i~=j
                         Ci=obj.Class(i);Pi=obj.indexInClass(i);
                         Cj=obj.Class(j);Pj=obj.indexInClass(j);
                         Ti=obj.classTheta(Ci).T(Pi)+2*pi*sepTheta/2;

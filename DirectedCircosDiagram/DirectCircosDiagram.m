@@ -140,6 +140,8 @@ classdef DirectCircosDiagram
                 end
             end
             % 画线并赋予颜色
+            obj.colorSet
+            size(obj.Data,1)
             for i=1:size(obj.Data,1)
                 for j=1:size(obj.Data,1)
                     if obj.Data(i,j)>0 && i~=j
@@ -200,8 +202,8 @@ classdef DirectCircosDiagram
             end
             pause(1e-16)
             for i=1:size(obj.Data,1)
-                for j=1:(i-1)
-                    if obj.Data(i,j)>0 
+                for j=1:size(obj.Data,1)
+                    if obj.Data(i,j)>0 && i~=j
                         Ci=obj.Class(i);
                         Cj=obj.Class(j);
                         set(get(obj.lineHdl(i,j),'Edge'),'ColorBinding','interpolated','ColorData',obj.colorSet{Ci,Cj})
@@ -221,8 +223,8 @@ classdef DirectCircosDiagram
         % 设置线除了颜色的其他属性
         function setLine(obj,varargin)
              for i=1:size(obj.Data,1)
-                for j=1:(i-1)
-                    if obj.Data(i,j)>0
+                for j=1:size(obj.Data,1)
+                    if obj.Data(i,j)>0 && i~=j
                         set(obj.lineHdl(i,j),varargin{:})
                     end
                 end
@@ -244,8 +246,8 @@ classdef DirectCircosDiagram
                 end
             end
             for i=1:size(obj.Data,1)
-                for j=1:(i-1)
-                    if obj.Data(i,j)>0 
+                for j=1:size(obj.Data,1)
+                    if obj.Data(i,j)>0 && i~=j
                         Ci=obj.Class(i);
                         Cj=obj.Class(j);
                         set(get(obj.lineHdl(i,j),'Edge'),'ColorBinding','interpolated','ColorData',obj.colorSet{Ci,Cj})
